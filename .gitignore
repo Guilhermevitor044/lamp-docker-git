@@ -1,0 +1,19 @@
+# Dados do MySQL (não versionar!)
+mysql_data/
+*.sock
+
+# WordPress uploads ou cache (se houver)
+wordpress/wp-content/uploads/
+wordpress/wp-content/cache/
+
+# Configurações de ambiente
+.env
+docker-compose.override.yml
+
+# Logs
+*.log
+*.tmp
+
+# Sistema
+.DS_Store
+Thumbs.db

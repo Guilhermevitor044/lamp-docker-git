@@ -1,0 +1,57 @@
+services:
+  apache:
+    build: ./apache
+    container_name: lamp-apache
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: lamp-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: lampdb
+      MYSQL_USER: lampuser
+      MYSQL_PASSWORD: lamppass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lamp-phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: lampuser
+      PMA_PASSWORD: lamppass
+    depends_on:
+      - mysql
+
+  wordpress:
+    image: wordpress:6.5-php8.2-apache
+    container_name: lamp-wordpress
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: lampuser
+      WORDPRESS_DB_PASSWORD: lamppass
+      WORDPRESS_DB_NAME: lampdb
+    volumes:
+      - ./wordpress:/var/www/html
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
